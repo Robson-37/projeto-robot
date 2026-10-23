@@ -1,0 +1,9 @@
+# Relatórios do Robot Framework
+results/
+
+# Evidências de testes
+evidencias/
+
+# Cache do Python
+__pycache__/
+*.pyc

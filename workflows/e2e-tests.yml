@@ -1,0 +1,59 @@
+name: Executar Testes E2E Robot Framework
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+  pull_request:
+    branches:
+      - main
+      - master
+
+  workflow_dispatch:
+
+jobs:
+  testes-e2e:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 1. Baixar o Código do Repositório
+        uses: actions/checkout@v4
+
+      - name: 2. Configurar o Python no Servidor
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 3. Instalar Google Chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: 4. Instalar Xvfb
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb
+
+      - name: 5. Instalar Dependências do Projeto
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install Pillow
+
+      - name: 6. Executar os Testes Robot Framework
+        run: |
+          xvfb-run --auto-servernum robot -d results tests/login_tests.robot
+
+      - name: 7. Salvar Relatórios (HTML/XML) como Artefatos
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-robot-framework
+          path: results/
+
+      - name: 8. Salvar Evidências (Screenshots) como Artefatos
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidencias-screenshots
+          path: evidencias/
