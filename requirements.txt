@@ -1,0 +1,6 @@
+# Dependências do Projeto
+
+robotframework>=7.0
+robotframework-seleniumlibrary>=6.2.0
+Pillow>=10.0.0
+allure-robotframework>=2.13.0
